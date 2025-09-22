@@ -1,0 +1,14 @@
+{
+    "content": null,
+    "embeds": [
+        {
+            "image": {
+                "url": "https://cdn.discordapp.com/attachments/1389319385600098494/1419307098143195157/wordle.png?ex=68d1483d&is=68cff6bd&hm=d73234ae77e061afd743476f4af5d2511b1510a4de3e5c0cba8623fb0b70bc60&"
+            },
+            "color": 3066993,
+            "description": "\ud83c\udf89 Congrats <@989858264588124180>! You guessed the word `plant`!",
+            "title": "Wordle \ud83d\udfe9\ud83d\udfe8\u2b1c"
+        }
+    ],
+    "attachments": []
+}

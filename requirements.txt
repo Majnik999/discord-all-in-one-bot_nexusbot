@@ -1,0 +1,5 @@
+discord.py
+colorama
+pillow
+python-dotenv
+requests
