@@ -349,6 +349,85 @@ class Utility(commands.Cog):
             info_embed.add_field(name="Video URL", value=embed_obj.video.url, inline=False)
 
         await ctx.send(embed=info_embed)
+    
+    @embed_commands.command(name="embed")
+    async def send_embed(self, ctx, *, json_string: str = None):
+        """
+        Send a Discord embed from a JSON string or a .json file attachment.
+        Usage:
+        - !sendembed {"title":"Hello","description":"World"}
+        - Attach a .json file and type !sendembed
+        """
+        data = None
+
+        # If there is a file attached
+        if ctx.message.attachments:
+            attachment = ctx.message.attachments[0]
+            if attachment.filename.endswith(".json"):
+                try:
+                    content = await attachment.read()
+                    data = json.loads(content.decode())
+                except Exception as e:
+                    await ctx.send(f"Failed to read JSON file: {e}")
+                    return
+            else:
+                await ctx.send("Please attach a valid .json file.")
+                return
+        elif json_string:
+            # If JSON string is provided
+            try:
+                data = json.loads(json_string)
+            except json.JSONDecodeError as e:
+                await ctx.send(f"Invalid JSON: {e}")
+                return
+        else:
+            await ctx.send("Please provide a JSON string or attach a .json file.")
+            return
+
+        # Convert JSON to Discord Embed
+        embed = discord.Embed(
+            title=data.get("title"),
+            description=data.get("description"),
+            url=data.get("url"),
+            color=int(data["color"]) if data.get("color") else discord.Color.default()
+        )
+
+        # Author
+        author = data.get("author")
+        if author:
+            embed.set_author(
+                name=author.get("name", ""),
+                icon_url=author.get("icon_url")
+            )
+
+        # Footer
+        footer = data.get("footer")
+        if footer:
+            embed.set_footer(
+                text=footer.get("text", ""),
+                icon_url=footer.get("icon_url")
+            )
+
+        # Image
+        image = data.get("image")
+        if image:
+            embed.set_image(url=image.get("url"))
+
+        # Thumbnail
+        thumbnail = data.get("thumbnail")
+        if thumbnail:
+            embed.set_thumbnail(url=thumbnail.get("url"))
+
+        # Fields
+        fields = data.get("fields", [])
+        for field in fields:
+            embed.add_field(
+                name=field.get("name", "\u200b"),
+                value=field.get("value", "\u200b"),
+                inline=field.get("inline", True)
+            )
+
+        await ctx.send(embed=embed)
 
 # This is a mandatory function to set up the cog.
 # The bot will call this function to load the cog.
