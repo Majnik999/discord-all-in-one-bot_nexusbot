@@ -5,7 +5,7 @@ import random
 import io
 import json
 import os
-from settings import WORDLE_WORDS
+from settings import WORDLE_WORDS, PREFIX
 
 # Example 100 words
 WORDS = WORDLE_WORDS
@@ -36,7 +36,7 @@ class Wordle(commands.Cog):
 
     @commands.group(name="wordle", invoke_without_command=True)
     async def wordle_group(self, ctx):
-        await ctx.send("Use `!wordle start <length>` to start a game or `!wordle stop` to stop your game.")
+        await ctx.send(f"Use `{PREFIX}wordle start <length>` to start a game or `{PREFIX}wordle stop` to stop your game.")
 
     @wordle_group.command(name="start")
     async def start_wordle(self, ctx, length: int = 5):
@@ -60,7 +60,7 @@ class Wordle(commands.Cog):
 
         embed = discord.Embed(
             title=f"Wordle 🟩 🟨 ⬜ ({length} letters)",
-            description=f"Guess the word by typing `!<yourguess>`",
+            description=f"Guess the word by typing `!<yourguess>`\nStop the game with `{PREFIX}wordle stop`",
             color=discord.Color.green()
         )
         img_file = self.generate_image(ctx.author.id)
@@ -80,10 +80,6 @@ class Wordle(commands.Cog):
         if message.author.bot:
             return
         if message.content.startswith("!") and len(message.content) > 1:
-            if message.content[1:].lower() == "stop":
-                del self.active_games[message.author.id]
-                self.save_games()
-                return await message.channel.send("Game has been terminated!")
             guess = message.content[1:].lower()
             if message.author.id not in self.active_games:
                 return
@@ -129,7 +125,7 @@ class Wordle(commands.Cog):
             # normal update
             embed = discord.Embed(
                 title=f"Wordle 🟩 🟨 ⬜ ({len(word)} letters)",
-                description=f"Guess the word by typing `!<yourguess>`\nStop game with `!stop`",
+                description=f"Guess the word by typing `!<yourguess>`\nStop game with `{PREFIX}wordle stop`",
                 color=discord.Color.green()
             )
             img_file = self.generate_image(message.author.id)
