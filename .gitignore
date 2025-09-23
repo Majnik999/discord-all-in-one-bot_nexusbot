@@ -4,3 +4,5 @@ src/__pycache__
 .venv
 .venv/*
 src/cogs/__pycache__
+.env
+src/logs/*

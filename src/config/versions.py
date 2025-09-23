@@ -1,0 +1,6 @@
+# Commands
+WORDLE_VERSION = "1.1.2"
+MAZE_VERSION = "1.2.1"
+
+# Bot
+BOT_VERSION = "2.4.0"
